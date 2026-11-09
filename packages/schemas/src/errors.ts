@@ -6,6 +6,7 @@
 export const E = {
 	// errors namespace — generic, cross-cutting
 	INTERNAL_ERROR: 'errors:INTERNAL_ERROR',
+	BAD_REQUEST: 'errors:BAD_REQUEST',
 	VALIDATION_FAILED: 'errors:VALIDATION_FAILED',
 	RATE_LIMITED: 'errors:RATE_LIMITED',
 	NOT_FOUND: 'errors:NOT_FOUND',
@@ -18,9 +19,13 @@ export const E = {
 	INVALID_CREDENTIALS: 'auth:INVALID_CREDENTIALS',
 	PASSWORD_TOO_SHORT: 'auth:PASSWORD_TOO_SHORT',
 	PASSWORD_TOO_LONG: 'auth:PASSWORD_TOO_LONG',
+	EMAIL_INVALID: 'auth:EMAIL_INVALID',
+	SESSION_EXPIRED: 'auth:SESSION_EXPIRED',
+	AUTH_FAILED: 'auth:AUTH_FAILED',
 
 	// users namespace
 	USER_NOT_FOUND: 'users:USER_NOT_FOUND',
+	IMAGE_URL_INVALID: 'users:IMAGE_URL_INVALID',
 } as const;
 
 export type ErrorCode = (typeof E)[keyof typeof E];

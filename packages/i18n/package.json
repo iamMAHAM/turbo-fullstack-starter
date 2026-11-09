@@ -1,0 +1,34 @@
+{
+	"name": "@app/i18n",
+	"version": "0.1.0",
+	"description": "Translations shared by the back-office and the mobile app",
+	"private": true,
+	"license": "UNLICENSED",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
+		"dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
+		"check-types": "tsc --noEmit",
+		"test": "vitest run"
+	},
+	"dependencies": {
+		"@app/schemas": "workspace:*"
+	},
+	"peerDependencies": {
+		"i18next": "^26.7.2"
+	},
+	"devDependencies": {
+		"i18next": "^26.7.2",
+		"typescript": "6.0.3",
+		"vitest": "^5.1.0"
+	}
+}

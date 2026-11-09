@@ -1,6 +1,7 @@
 import type { z } from 'zod';
 import { authClient } from './auth-client';
 import { API_URL } from './config';
+import { locale } from './i18n';
 
 export async function apiGet<T extends z.ZodType>(
 	path: string,
@@ -10,15 +11,15 @@ export async function apiGet<T extends z.ZodType>(
 	const headers = new Headers(init?.headers);
 	const cookie = await authClient.getCookie();
 	if (cookie) headers.set('Cookie', cookie);
+	headers.set('x-locale', locale);
 
-	// Native fetch has no cookie jar: the session cookie is sent by hand.
 	const res = await fetch(`${API_URL}${path}`, {
 		...init,
 		headers,
 		credentials: 'omit',
 	});
 	if (!res.ok) {
-		throw new Error(`GET ${path} failed (${res.status})`);
+		throw new Error(`GET ${path} ${res.status}`);
 	}
 	return schema.parse(await res.json());
 }

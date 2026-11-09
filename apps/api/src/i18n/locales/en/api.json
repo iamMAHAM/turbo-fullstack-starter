@@ -1,6 +1,7 @@
 {
 	"healthcheck": {
 		"ok": "API is up.",
-		"degraded": "API is degraded."
+		"degraded": "API is degraded.",
+		"databaseDown": "Database unreachable."
 	}
 }

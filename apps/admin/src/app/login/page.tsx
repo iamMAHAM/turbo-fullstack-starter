@@ -3,9 +3,11 @@
 import { signInSchema } from '@app/schemas';
 import { useRouter } from 'next/navigation';
 import { type FormEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { authClient } from '../../lib/auth-client';
 
 export default function LoginPage() {
+	const { t } = useTranslation();
 	const router = useRouter();
 	const [error, setError] = useState<string | null>(null);
 	const [pending, setPending] = useState(false);
@@ -18,7 +20,7 @@ export default function LoginPage() {
 			password: form.get('password'),
 		});
 		if (!parsed.success) {
-			setError('Invalid email or password.');
+			setError(t('errors.invalidForm'));
 			return;
 		}
 
@@ -26,7 +28,9 @@ export default function LoginPage() {
 		const { error } = await authClient.signIn.email(parsed.data);
 		setPending(false);
 		if (error) {
-			setError(error.message ?? 'Sign-in failed.');
+			setError(
+				error.status && error.message ? error.message : t('errors.network'),
+			);
 			return;
 		}
 		router.replace('/');
@@ -34,14 +38,14 @@ export default function LoginPage() {
 
 	return (
 		<main>
-			<h1>Sign in</h1>
+			<h1>{t('auth.signIn.title')}</h1>
 			<form onSubmit={onSubmit}>
 				<label>
-					Email
+					{t('auth.email')}
 					<input name="email" type="email" autoComplete="email" required />
 				</label>
 				<label>
-					Password
+					{t('auth.password')}
 					<input
 						name="password"
 						type="password"
@@ -51,7 +55,7 @@ export default function LoginPage() {
 				</label>
 				{error && <p role="alert">{error}</p>}
 				<button type="submit" disabled={pending}>
-					Sign in
+					{t('auth.signIn.submit')}
 				</button>
 			</form>
 		</main>

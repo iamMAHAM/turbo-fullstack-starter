@@ -14,3 +14,15 @@ export const DEFAULT_NAMESPACE: Namespace = 'errors';
 export const isSupportedLocale = (value: unknown): value is Locale =>
 	typeof value === 'string' &&
 	(SUPPORTED_LOCALES as readonly string[]).includes(value);
+
+export const resolveLocale = (
+	explicit: string | null | undefined,
+	acceptLanguage: string | null | undefined,
+): Locale => {
+	if (isSupportedLocale(explicit)) return explicit;
+	const preferred = (acceptLanguage ?? '')
+		.split(',')
+		.map((entry) => entry.trim().split(';')[0]?.toLowerCase().split('-')[0])
+		.find(isSupportedLocale);
+	return preferred ?? DEFAULT_LOCALE;
+};

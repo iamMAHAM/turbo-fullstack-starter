@@ -11,6 +11,7 @@ API with Better Auth.
 | `apps/admin`       | `@app/admin`   | Back-office (Next.js 16)                      |
 | `apps/mobile`      | `@app/mobile`  | Mobile app (Expo SDK 58, React Native)        |
 | `packages/schemas` | `@app/schemas` | Zod schemas and types shared by all three     |
+| `packages/i18n`    | `@app/i18n`    | Back-office and mobile app translations       |
 
 `apps/api` follows the
 [`nestjs-api-starter`](https://github.com/iamMAHAM/nestjs-api-starter)
@@ -55,6 +56,8 @@ On a physical phone, `localhost` is the phone itself: set
    `BETTER_AUTH_TRUSTED_ORIGINS` (`myapp://`).
 4. Rename the database in `docker-compose.yml` and `DATABASE_URL`.
 5. Set the Swagger title in `apps/api/src/main.ts`.
+6. Pick the default locale: `DEFAULT_LOCALE` in `apps/api/src/i18n/settings.ts`
+   and in `packages/i18n/src/index.ts`.
 
 ## Commands
 
@@ -87,6 +90,21 @@ after a change, `bun run build` or `bun run dev` rebuilds it.
 
 Zod and React exist in a single version across the repo. The React version is
 the one pinned by the Expo SDK; the back-office follows it.
+
+## Translations
+
+No user-facing text is hardcoded, in the apps or in API responses. English is
+the default locale, French is available.
+
+- **Back-office and mobile.** Texts live in `packages/i18n/src/locales`
+  (`en.ts`, `fr.ts`) and are rendered with `useTranslation()` from
+  `react-i18next`. The type of `fr.ts` derives from `en.ts`, so a missing key
+  fails the type check.
+- **API.** Messages live in `apps/api/src/i18n/locales`. Every error carries a
+  code (`auth:INVALID_CREDENTIALS`) and a translated message, Better Auth
+  errors included.
+- **Locale.** The back-office follows the browser language, the mobile app
+  the device language and sends it to the API in the `x-locale` header.
 
 ## Authentication
 

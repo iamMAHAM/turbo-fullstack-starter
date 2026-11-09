@@ -4,5 +4,6 @@
 	"RATE_LIMITED": "Trop de tentatives, réessayez dans quelques minutes.",
 	"NOT_FOUND": "La ressource demandée est introuvable.",
 	"FORBIDDEN": "Vous n'êtes pas autorisé à effectuer cette action.",
-	"UNAUTHORIZED": "Vous devez être connecté pour faire cela."
+	"UNAUTHORIZED": "Vous devez être connecté pour faire cela.",
+	"BAD_REQUEST": "La requête est invalide."
 }
