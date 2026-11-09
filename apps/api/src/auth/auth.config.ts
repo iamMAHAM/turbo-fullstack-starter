@@ -1,0 +1,79 @@
+import { isHttpsUrl } from '@app/schemas';
+import { expo } from '@better-auth/expo';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { betterAuth } from 'better-auth';
+import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { APIError } from 'better-auth/api';
+import { CLIENT_IP_HEADER } from '../common/http/client-ip.js';
+import type { Env } from '../env.js';
+import { PrismaClient } from '../generated/prisma/client.js';
+
+// Better Auth's sign-up and update-user routes accept any string as `image`.
+const assertHttpsImage = async (user: { image?: unknown }) => {
+	if (user.image != null && !isHttpsUrl(user.image)) {
+		throw new APIError('BAD_REQUEST', {
+			code: 'INVALID_IMAGE_URL',
+			message: 'image must be an https URL',
+		});
+	}
+};
+
+/** Only the slice of the environment Better Auth actually needs. */
+export type AuthEnv = Pick<
+	Env,
+	| 'NODE_ENV'
+	| 'DATABASE_URL'
+	| 'BETTER_AUTH_SECRET'
+	| 'BETTER_AUTH_URL'
+	| 'BETTER_AUTH_TRUSTED_ORIGINS'
+	| 'AUTH_COOKIE_SAME_SITE'
+>;
+
+/**
+ * Better Auth needs its own Prisma client: the instance is built before Nest's
+ * lifecycle hooks run, so it cannot reuse the connection `PrismaService` opens.
+ */
+export const createAuth = (env: AuthEnv) => {
+	const prisma = new PrismaClient({
+		adapter: new PrismaPg({ connectionString: env.DATABASE_URL }),
+	});
+	const isProduction = env.NODE_ENV === 'production';
+	// Expo Go serves the app from exp://<LAN IP>:<port> during development.
+	const devOrigins =
+		env.NODE_ENV === 'development' ? ['exp://', 'exp://**'] : [];
+
+	return betterAuth({
+		baseURL: env.BETTER_AUTH_URL,
+		secret: env.BETTER_AUTH_SECRET,
+		trustedOrigins: [...env.BETTER_AUTH_TRUSTED_ORIGINS, ...devOrigins],
+		plugins: [expo()],
+		database: prismaAdapter(prisma, { provider: 'postgresql' }),
+		emailAndPassword: {
+			enabled: true,
+			minPasswordLength: 8,
+			maxPasswordLength: 128,
+		},
+		session: {
+			expiresIn: 60 * 60 * 24 * 7, // 7 days
+			updateAge: 60 * 60 * 24, // refresh the cookie once a day
+		},
+		databaseHooks: {
+			user: {
+				create: { before: assertHttpsImage },
+				update: { before: assertHttpsImage },
+			},
+		},
+		advanced: {
+			defaultCookieAttributes: {
+				httpOnly: true,
+				sameSite: env.AUTH_COOKIE_SAME_SITE,
+				secure: isProduction || env.AUTH_COOKIE_SAME_SITE === 'none',
+			},
+			ipAddress: { ipAddressHeaders: [CLIENT_IP_HEADER] },
+		},
+	});
+};
+
+export type Auth = ReturnType<typeof createAuth>;
+export type Session = Auth['$Infer']['Session'];
+export type AuthUser = Session['user'];

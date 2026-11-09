@@ -1,0 +1,14 @@
+{
+	"expo": {
+		"name": "App",
+		"slug": "app",
+		"scheme": "app",
+		"version": "0.1.0",
+		"orientation": "portrait",
+		"userInterfaceStyle": "light",
+		"plugins": ["expo-router", "expo-secure-store"],
+		"experiments": {
+			"typedRoutes": true
+		}
+	}
+}

@@ -1,0 +1,37 @@
+version: 2
+updates:
+  - package-ecosystem: bun
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # Review framework majors by hand; TS 7 is outside @nestjs/swagger and @thallesp/nestjs-better-auth's peer ranges.
+      - dependency-name: "@nestjs/*"
+        update-types: [version-update:semver-major]
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
+      # Types track the minimum supported Node (engines).
+      - dependency-name: "@types/node"
+        update-types: [version-update:semver-major]
+      # Versions pinned by the Expo SDK; upgrade them with `expo install --fix`.
+      - dependency-name: react
+      - dependency-name: react-dom
+      - dependency-name: react-native
+      - dependency-name: "react-native-*"
+      - dependency-name: expo
+      - dependency-name: "expo-*"
+      - dependency-name: "@types/react"
+      - dependency-name: "@types/react-dom"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+
+  - package-ecosystem: docker
+    directory: /apps/api
+    schedule:
+      interval: monthly
