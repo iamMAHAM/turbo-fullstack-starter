@@ -4,5 +4,6 @@
 	"RATE_LIMITED": "Too many attempts, try again in a few minutes.",
 	"NOT_FOUND": "The requested resource was not found.",
 	"FORBIDDEN": "You are not allowed to perform this action.",
-	"UNAUTHORIZED": "You must be signed in to do that."
+	"UNAUTHORIZED": "You must be signed in to do that.",
+	"BAD_REQUEST": "The request is invalid."
 }

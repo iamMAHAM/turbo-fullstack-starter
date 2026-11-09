@@ -21,7 +21,7 @@ export async function apiGet<T extends z.ZodType>(
 		...init,
 	});
 	if (!res.ok) {
-		throw new ApiError(res.status, `GET ${path} failed (${res.status})`);
+		throw new ApiError(res.status, `GET ${path} ${res.status}`);
 	}
 	return schema.parse(await res.json());
 }

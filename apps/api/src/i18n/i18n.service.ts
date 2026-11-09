@@ -44,7 +44,15 @@ export class I18nService implements OnModuleInit {
 
 	/** Translate a key only known at runtime (error codes, dynamic namespaces). */
 	tLoose(key: string, options?: Record<string, unknown>): string {
-		const translate = this.instance.getFixedT(currentLocale()) as unknown as (
+		return this.tLooseFor(currentLocale(), key, options);
+	}
+
+	tLooseFor(
+		locale: Locale,
+		key: string,
+		options?: Record<string, unknown>,
+	): string {
+		const translate = this.instance.getFixedT(locale) as unknown as (
 			k: string,
 			o?: Record<string, unknown>,
 		) => string;

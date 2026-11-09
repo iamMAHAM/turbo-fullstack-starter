@@ -10,6 +10,7 @@ COPY apps/api/package.json apps/api/
 COPY apps/admin/package.json apps/admin/
 COPY apps/mobile/package.json apps/mobile/
 COPY packages/schemas/package.json packages/schemas/
+COPY packages/i18n/package.json packages/i18n/
 
 # --- deps --------------------------------------------------------------------
 FROM manifests AS deps

@@ -1,3 +1,4 @@
 {
-	"USER_NOT_FOUND": "Aucun utilisateur trouvé avec l'identifiant {{id}}."
+	"USER_NOT_FOUND": "Aucun utilisateur trouvé avec l'identifiant {{id}}.",
+	"IMAGE_URL_INVALID": "L'image doit être une URL https."
 }

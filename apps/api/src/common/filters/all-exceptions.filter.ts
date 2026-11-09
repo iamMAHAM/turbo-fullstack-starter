@@ -38,18 +38,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
 		if (exception instanceof HttpException) {
 			const status = exception.getStatus();
-			const code = STATUS_TO_CODE[status];
-			if (code) return this.send(res, status, code);
-
-			// Keep Nest's own payload (better-auth, guards, …) but normalize the shape.
-			const payload = exception.getResponse();
-			return res
-				.status(status)
-				.json(
-					typeof payload === 'string'
-						? { statusCode: status, message: payload }
-						: { statusCode: status, ...(payload as Record<string, unknown>) },
-				);
+			const code =
+				STATUS_TO_CODE[status] ??
+				(status < 500 ? E.BAD_REQUEST : E.INTERNAL_ERROR);
+			return this.send(res, status, code);
 		}
 
 		this.logger.error(

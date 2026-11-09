@@ -75,6 +75,23 @@ describe('Users (e2e)', () => {
 			.expect(400);
 	});
 
+	it('translates Better Auth errors into the request locale', async () => {
+		const fr = await request(app.getHttpServer())
+			.post('/api/auth/sign-in/email')
+			.set('x-locale', 'fr')
+			.send({ email, password: 'wrong-password-123' })
+			.expect(401);
+		expect(fr.body.code).toBe('auth:INVALID_CREDENTIALS');
+		expect(fr.body.message).toBe('E-mail ou mot de passe incorrect.');
+
+		const en = await request(app.getHttpServer())
+			.post('/api/auth/sign-in/email')
+			.set('x-locale', 'en')
+			.send({ email, password: 'wrong-password-123' })
+			.expect(401);
+		expect(en.body.message).toBe('Email or password is incorrect.');
+	});
+
 	it('rejects a non-https avatar through Better Auth routes too', async () => {
 		const other = `e2e-${randomUUID()}@example.com`;
 		try {
@@ -86,7 +103,10 @@ describe('Users (e2e)', () => {
 					name: 'XSS',
 					image: 'javascript:alert(1)',
 				})
-				.expect(400);
+				.expect(400)
+				.expect((res) => {
+					expect(res.body.code).toBe('users:IMAGE_URL_INVALID');
+				});
 		} finally {
 			await app.get(PrismaService).user.deleteMany({ where: { email: other } });
 		}

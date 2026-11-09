@@ -1,4 +1,5 @@
 import { Redirect } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import {
 	ActivityIndicator,
 	Button,
@@ -9,6 +10,7 @@ import {
 import { authClient } from '../lib/auth-client';
 
 export default function HomeScreen() {
+	const { t } = useTranslation();
 	const { data: session, isPending } = authClient.useSession();
 
 	if (isPending) {
@@ -22,8 +24,10 @@ export default function HomeScreen() {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Hello, {session.user.name}</Text>
-			<Button title="Sign out" onPress={() => authClient.signOut()} />
+			<Text style={styles.title}>
+				{t('home.greeting', { name: session.user.name })}
+			</Text>
+			<Button title={t('auth.signOut')} onPress={() => authClient.signOut()} />
 		</View>
 	);
 }
