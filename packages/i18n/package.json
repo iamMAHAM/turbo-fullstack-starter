@@ -24,10 +24,10 @@
 		"@app/schemas": "workspace:*"
 	},
 	"peerDependencies": {
-		"i18next": "^26.7.2"
+		"i18next": "^27.1.1"
 	},
 	"devDependencies": {
-		"i18next": "^26.7.2",
+		"i18next": "^27.1.1",
 		"typescript": "6.0.3",
 		"vitest": "^5.1.0"
 	}
