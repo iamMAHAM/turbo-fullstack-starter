@@ -14,8 +14,8 @@
 	"dependencies": {
 		"@app/i18n": "workspace:*",
 		"@app/schemas": "workspace:*",
-		"@better-auth/expo": "^1.7.18",
-		"better-auth": "^1.7.18",
+		"@better-auth/expo": "^1.7.27",
+		"better-auth": "^1.7.27",
 		"expo": "~58.0.23",
 		"expo-constants": "~58.0.15",
 		"expo-linking": "~58.0.16",
